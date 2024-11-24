@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>More Recipes</title>
+  <style>
+    /* Body background and font setup */
+    body {
+      font-family: 'Arial', sans-serif;
+      color: #333;
+      background-color: #FFB6C1; /* Light Pink */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* App Container (Normal rectangular shape) */
+    .app-container {
+      width: 90%;
+      max-width: 1200px;
+      background-color: #FFB6C1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Header styling with white and black colors */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #FFB6C1; /* Light Pink */
+      color: #fff;
+      border-bottom: 4px solid #cfdbca;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2.9em;
+      font-weight: bold;
+      color: #ee5d77;
+      border: 3px solid #d90e52;
+      padding: 10px;
+      border-radius: 50%;
+    }
+
+    header .logo img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    header .search-bar {
+      padding: 8px;
+      font-size: 1em;
+      width: 100%;
+      border: 1px solid #cbd8d3;
+      border-radius: 5px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header .user-profile a {
+      color: #e40d8e;
+      text-decoration: none;
+      font-size: 0.8em;
+    }
+
+    /* Filter bar styling */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      background-color: #f892a2; /* Light Pink */
+      border-top: 2px solid #d90e52;
+      border-bottom: 2px solid #ef95d2;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      margin: 0 5px;
+      background-color: #c7354b; /* Light Pink */
+      color: #e8eae8;
+      border: 1px solid #0d0801;
+      border-radius: 300px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .filter-btn:hover {
+      background-color: #f629ca;
+      color: #FFB6C1;
+    }
+
+    /* Active filter button styling */
+    .filter-btn.active {
+      background-color: #d457b31c;
+      color: #000;
+    }
+
+    /* Logo grid item styling */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Circular logo items */
+    .logo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      background-color: #c7354b;
+      padding: 15px;
+      border-radius: 50%; /* Make containers circular */
+      border: 3px solid #f0f0f0;
+      width: 150px;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s, background-color 0.2s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-item:hover {
+      transform: scale(1.05);
+      background-color: #f5f5f5;
+      color: #f312a1;
+    }
+
+    .logo-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .logo-item p {
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    /* Footer styling */
+    footer {
+      text-align: center;
+      background-color: #292626;
+      color: #efeae2;
+      border-top: 4px solid #d33d49;
+      position: relative;
+      margin-top: auto;
+      padding: 10px;
+    }
+
+    footer a {
+      color: #ebe6df;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 15px;
+    }
+
+    /* Login Overlay styling */
+    .login-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-content {
+      background: #b6669c;
+      padding: 20px;
+      width: 300px;
+      border: 2px solid #c22828;
+      border-radius: 10px;
+      text-align: center;
+      color: #000;
+    }
+
+    .close-btn {
+      position: relative;
+      top: -15px;
+      right: -150px;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+
+    .login-content input {
+      display: block;
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #000;
+      border-radius: 5px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .login-content button {
+      padding: 10px 20px;
+      background-color: #000;
+      color: #ef8dc8;
+      border: 1px solid #d60d68;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #loginMessage {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header Section -->
+    <header>
+      <div class="logo">
+        <img src="more recipes.png" alt=""> <!-- Replace with your logo image -->
+        <span>More Recipes</span>
+      </div>
+      <div class="search-bar-container">
+        <input type="text" class="search-bar" placeholder="Search recipes...">
+      </div>
+      <div class="user-profile">
+        <a href="#" id="loginLink" onclick="toggleLogin()">Login</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">Logout</a>
+      </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+      <section class="filter-bar">
+        <button class="filter-btn" onclick="filterCategory('all')">All</button>
+        <button class="filter-btn" onclick="filterCategory('vegetarian')">Vegetarian</button>
+        <button class="filter-btn" onclick="filterCategory('non-vegetarian')">Non-Vegetarian</button>
+        <button class="filter-btn" onclick="filterCategory('desserts')">Desserts</button>
+      </section>
+
+      <section class="logo-grid">
+        <!-- Food Category Logos -->
+        <a href="https://online.kfc.co.in/" target="_blank" class="logo-item non-vegetarian">
+            <img src="kfc.jpg" alt="Serious Eats">
+            <p>KFC online</p>
+          </a>
+  
+        <a href="https://www.foodnetwork.com" target="_blank" class="logo-item vegetarian">
+          <img src="food network.png" alt="Food Network"> <!-- Corrected URL -->
+          <p>Food Network</p>
+        </a>
+        <a href="https://www.zomato.com/" target="_blank" class="logo-item vegetarian">
+            <img src="zomato.png" alt=""> <!-- Corrected URL -->
+            <p>Zomato</p>
+          </a>
+        
+        <a href="https://www.swiggy.com/" target="_blank" class="logo-item vegetarian">
+            <img src="swiggy.jpg" alt="swiggy"> <!-- Corrected URL -->
+            <p>Swiggy</p>
+          </a>
+        <a href="https://www.allrecipes.com" target="_blank" class="logo-item vegetarian">
+          <img src="ar.png" alt="All Recipes">
+          <p>All Recipes</p>
+        </a>
+        <a href="https://www.tasteofhome.com" target="_blank" class="logo-item">
+          <img src="toh.jpg" alt="Taste of Home">
+          <p>Taste of Home</p>
+        </a>
+        <a href="https://www.delish.com" target="_blank" class="logo-item">
+          <img src="delish.jpg" alt="Delish">
+          <p>Delish</p>
+        </a>
+
+        <!-- Non-Vegetarian Category -->
+        <a href="https://www.bonappetit.com" target="_blank" class="logo-item non-vegetarian">
+          <img src="bon.jpg" alt="Bon Appétit">
+          <p>Bon Appétit</p>
+        </a>
+        <a href="https://www.seriouseats.com" target="_blank" class="logo-item non-vegetarian">
+          <img src="se.png" alt="Serious Eats">
+          <p>Serious Eats</p>
+        </a>
+
+        <!-- Desserts Category -->
+        <a href="https://www.sweetandsavory.co" target="_blank" class="logo-item desserts">
+          <img src="Sweet Apolita.jpg" alt="Sweet & Savory">
+          <p>Sweet & Savory</p>
+        </a>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+      <p>© 2024 More Recipes | <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a></p>
+    </footer>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-content">
+      <span class="close-btn" onclick="toggleLogin()">&times;</span>
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="attemptLogin()">Login</button>
+      <p id="loginMessage"></p>
+    </div>
+  </div>
+
+  <script>
+    // Track login status
+    let isLoggedIn = false;
+
+    // Filter category functionality
+    function filterCategory(category) {
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(button => {
+        if (button.innerText.toLowerCase() === category || category === 'all') {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+
+      const logos = document.querySelectorAll('.logo-item');
+      logos.forEach(logo => {
+        if (category === 'all' || logo.classList.contains(category)) {
+          logo.style.display = 'block';
+        } else {
+          logo.style.display = 'none';
+        }
+      });
+    }
+
+    // Toggle login modal
+    function toggleLogin() {
+      const overlay = document.getElementById('loginOverlay');
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Handle login
+    function attemptLogin() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const message = document.getElementById('loginMessage');
+
+      if (username === 'user' && password === 'password') {
+        message.textContent = 'Login successful!';
+        message.style.color = 'green';
+        isLoggedIn = true;
+        updateLoginStatus();
+      } else {
+        message.textContent = 'Invalid username or password';
+        message.style.color = 'red';
+      }
+    }
+
+    // Logout functionality
+    function logout() {
+      isLoggedIn = false;
+      updateLoginStatus();
+    }
+
+    // Update the login/logout links
+    function updateLoginStatus() {
+      if (isLoggedIn) {
+        document.getElementById('loginLink').style.display = 'none';
+        document.getElementById('logoutLink').style.display = 'inline';
+      } else {
+        document.getElementById('loginLink').style.display = 'inline';
+        document.getElementById('logoutLink').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
